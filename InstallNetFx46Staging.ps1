@@ -4,6 +4,10 @@ Set-StrictMode -Version Latest
 
 $logFile = Join-Path $env:TEMP -ChildPath "InstallNetFx46ScriptLog.txt"
 
+# Set ASPNETCORE_ENVIRONMENT to Staging
+setx /m ASPNETCORE_ENVIRONMENT Staging
+
+        
 # Check if the latest NetFx46 version exists
 $netFxKey = Get-ItemProperty -Path "HKLM:\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\" -ErrorAction Ignore
 
@@ -71,8 +75,6 @@ else {
     # 0, 1641 and 3010 indicate success. See https://msdn.microsoft.com/en-us/library/ee390831(v=vs.110).aspx for detail.
     if($exitCode -eq 0 -or $exitCode -eq 1641 -or $exitCode -eq 3010) {
         "$(Get-Date): Install NetFx succeeded with exit code : $exitCode." | Tee-Object -FilePath $logFile -Append
-        # Set ASPNETCORE_ENVIRONMENT to Staging
-        setx /m ASPNETCORE_ENVIRONMENT Staging
         exit 0
     }
     else {
